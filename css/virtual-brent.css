@@ -1,0 +1,96 @@
+@import "../fonts/komika/stylesheet.css";
+
+body {
+  margin: 0;
+  background-color: black;
+}
+
+header {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  background: white;
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 0.4vmin;
+  text-align: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2vmin;
+}
+
+header p {
+  font-size: 1.4vmin;
+}
+
+#brent {
+  display: block;
+  margin: 0 auto;
+  width: 107vmin;
+}
+
+#brent-mouth {
+  position: absolute;
+  top: 37.7vmin;
+  left: calc(50vw - 0.25vmin);
+  width: 6.7vmin;
+  transform: translate3d(0, 0, 0);
+}
+
+#brent-mouth.open {
+  animation-name: mouth-open;
+  animation-timing-function: ease-out;
+}
+
+#brent-mouth.close {
+  animation: mouth-close 100ms ease-out;
+}
+
+#brent-quip {
+  background: white;
+  font-size: 2vmin;
+  font-family: "Peanuts", "KomikaHand", cursive;
+  width: 40vmin;
+  border-color: black;
+  border-style: solid;
+  border-width: 57px 19px 19px 19px;
+  border-image: url(../images/speech-bubble2.svg) 57 19 19 19 stretch stretch;
+  background: transparent;
+
+  position: absolute;
+  top: 40vmin;
+  left: calc(50vw - 40vmin);
+}
+
+#brent-quip div {
+  background: white;
+}
+
+#brent-button {
+  display: inline-block;
+  font-family: "Helvetica", sans-serif;
+  font-size: 1.7vmin;
+  background: #ffcccc;
+}
+
+@keyframes  mouth-close {
+  
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes  mouth-open {
+  100% {
+    transform: translate3d(0, 1vmin, 0);
+  }
+
+  
+}
+
+@media (max-aspect-ratio: 1123/1038) {
+  #brent-mouth {
+    left: calc(54vw);
+  }
+}

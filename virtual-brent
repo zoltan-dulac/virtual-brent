@@ -1,0 +1,8 @@
+#!/bin/sh
+
+FILE="/Users/zhawry/brent.dat"
+LINES=`wc -l $FILE | awk '{print $1}'`
+RANDLINE=`expr $RANDOM % $LINES + 1`
+QUOTE=`head -$RANDLINE $FILE | tail -1`
+
+echo $QUOTE
