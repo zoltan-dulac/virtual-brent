@@ -1,41 +1,44 @@
-
-
 var vb = new function () {
   var me = this,
     data = [],
     msg = window.SpeechSynthesisUtterance ? new SpeechSynthesisUtterance() : null,
     currentText,
-    $quote = $('#quote'),
-    $mouth = $('#brent-mouth'),
-    $button = $('#brent-button'),
-    mouthStyle = $mouth[0].style;
+    $quote = document.getElementById('quote'),
+    $mouth = document.getElementById('brent-mouth'),
+    $button = document.getElementById('brent-button'),
+    $body = document.body,
+    mouthStyle = $mouth.style;
 
   function randInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   function getData() {
-    var xhr = $.ajax({
-      url: 'brent.dat',
-      mimeType: 'text/plain'
-    })
-    .done(function (req) {
-      data=xhr.responseText.split('\n');
-      getNewQuote();
-    })
-    .fail(function () {
-      alert('Brent can\'t access his data right now.  Pleae try again later.');
-    });
+    var xhr = fetch('brent.dat', { method: 'GET'})
+      .then(function(response) {
+        if (response.ok) {
+          return response.text();
+        } else {
+          return false;
+        }
+      })
+      .then(function(text) {
+        data=text.split('\n');
+        getNewQuote();
+      })
+      .catch(function() {
+        alert('Brent just gave up and went home. Please try again later.');
+      });;
 
-
-    $button.on('click', getNewQuote);
+    $button.addEventListener('click', getNewQuote);
   }
 
   function say(text) {
-
     if (msg === null) {
       return;
     }
+
+    $body.classList.add('animating');
     // cancel anything that is being spoken right now.
     speechSynthesis.cancel();
 
@@ -51,15 +54,20 @@ var vb = new function () {
     msg.addEventListener('boundary', onWordBoundary);
 
     msg.onend = function(e) {
-      $quote.html(currentText);
+      $body.classList.remove('animating');
+      $quote.innerHTML = currentText;
     }
 
-    speechSynthesis.speak(msg);
+    requestAnimationFrame( function () {
+      speechSynthesis.speak(msg);
+    });
+
   }
 
   function getNewQuote() {
-    var quoteNum = randInt(0, data.length - 1);   // 68
-    var quote = data[quoteNum].substring(17).replace(/&apos;/g, '\'');
+    var quoteNum =  randInt(0, data.length - 1);   // 82 35
+    var quote = data[quoteNum].substring(17).replace(/&apos;/g, '\'').replace(/:[^\s]+:/g, '');
+    console.clear();
     console.log(quoteNum);
     say(quote);
   }
@@ -77,12 +85,13 @@ var vb = new function () {
     if(word.length <= 3) { return 1; }                             //return 1 if word.length <= 3
       word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');   //word.sub!(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '')
       word = word.replace(/^y/, '');                                 //word.sub!(/^y/, '')
-      return word.match(/[aeiouy]{1,2}/g).length;                    //word.scan(/[aeiouy]{1,2}/).size
+      var matches =  word.match(/[aeiouy]{1,2}/g);
+      return matches ? matches.length : 1;                    //word.scan(/[aeiouy]{1,2}/).size
   }
 
   function onWordBoundary(e) {
     //var text = e.currentTarget.text;
-    $mouth[0].className = '';
+    $mouth.className = '';
     var textUpToBoundary = currentText.substring(0, e.charIndex);
       var rest = currentText.substring(e.charIndex);
       var nextBoundary = rest.regexIndexOf(/\s/);
@@ -92,24 +101,26 @@ var vb = new function () {
         wordSpoken = currentText.substring(currentText.lastIndexOf(' '));
       }
 
-
       var syllables = syllable(wordSpoken);
-
 
       console.log(wordSpoken, syllables);
       mouthStyle.animationDuration=`${400/syllables}ms`;
       mouthStyle.animationIterationCount = syllables;
-      $quote.html(currentText.substring(0, e.charIndex + nextBoundary + 1));
+      $quote.innerHTML = (currentText.substring(0, e.charIndex + nextBoundary + 1));
     
-    setTimeout(function () {
-      $mouth[0].className = 'open';
-    }, 10);
-    
+    requestAnimationFrame(openMouth, 10);
+  }
+
+  function openMouth() {
+    requestAnimationFrame(
+      function () {
+        $mouth.className = 'open';
+      }
+    );
   }
 
   me.init = function () {
     getData();
-
   }
 }
 

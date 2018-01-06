@@ -38,6 +38,10 @@ header p {
   transform: translate3d(0, 0, 0);
 }
 
+.animating #brent-mouth {
+  will-change: transform;
+}
+
 #brent-mouth.open {
   animation-name: mouth-open;
   animation-timing-function: ease-out;
@@ -50,7 +54,7 @@ header p {
 #brent-quip {
   background: white;
   font-size: 2vmin;
-  font-family: "Peanuts", "KomikaHand", cursive;
+  font-family: "KomikaHand", cursive;
   width: 40vmin;
   border-color: black;
   border-style: solid;
@@ -63,9 +67,15 @@ header p {
   left: calc(50vw - 40vmin);
 }
 
+
 #brent-quip div {
   background: white;
 }
+
+.animating #brent-quip div {
+  will-change: contents;
+}
+
 
 #brent-button {
   display: inline-block;
