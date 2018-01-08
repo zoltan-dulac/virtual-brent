@@ -108,7 +108,7 @@ var vb = new function () {
       mouthStyle.animationIterationCount = syllables;
       $quote.innerHTML = (currentText.substring(0, e.charIndex + nextBoundary + 1));
     
-    requestAnimationFrame(openMouth, 10);
+    requestAnimationFrame(openMouth, 5);
   }
 
   function openMouth() {
