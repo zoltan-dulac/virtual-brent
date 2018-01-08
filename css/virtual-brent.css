@@ -33,7 +33,7 @@ header p {
 #brent-mouth {
   position: absolute;
   top: 37.7vmin;
-  left: calc(50vw - 0.25vmin);
+  left: calc(50vw + 0.5vmin);
   width: 6.7vmin;
   transform: translate3d(0, 0, 0);
 }

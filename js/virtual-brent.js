@@ -66,7 +66,7 @@ var vb = new function () {
 
   function getNewQuote() {
     var quoteNum =  randInt(0, data.length - 1);   // 82 35
-    var quote = data[quoteNum].substring(17).replace(/&apos;/g, '\'').replace(/:[^\s]+:/g, '');
+    var quote = data[quoteNum].replace(/&apos;/g, '\'').replace(/:[^\s]+:/g, '');
     console.clear();
     console.log(quoteNum);
     say(quote);
