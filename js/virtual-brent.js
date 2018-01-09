@@ -7,7 +7,8 @@ var vb = new function () {
     $mouth = document.getElementById('brent-mouth'),
     $button = document.getElementById('brent-button'),
     $body = document.body,
-    mouthStyle = $mouth.style;
+    mouthStyle = $mouth.style,
+    fallbackTimeout;
 
   function randInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -24,13 +25,20 @@ var vb = new function () {
       })
       .then(function(text) {
         data=text.split('\n');
-        getNewQuote();
+        if (window.speechSynthesis.getVoices().length === 0) {
+          window.speechSynthesis.onvoiceschanged = function() {
+            getNewQuote();
+          };
+        } else {
+          getNewQuote();
+        }
+        
       })
       .catch(function() {
         alert('Brent just gave up and went home. Please try again later.');
       });;
 
-    $button.addEventListener('click', getNewQuote);
+    $body.addEventListener('click', getNewQuote);
   }
 
   function say(text) {
@@ -45,17 +53,25 @@ var vb = new function () {
     currentText = text;
 
     var voices = window.speechSynthesis.getVoices();
+    console.log(voices);
     msg = window.SpeechSynthesisUtterance ? new SpeechSynthesisUtterance() : null
     msg.voice = voices[0];
     msg.rate = 1;
     msg.pitch = 1;
     msg.text = text;
 
+    fallbackTimeout = setTimeout(function() {
+      $quote.innerHTML = text;
+    }, 100);
+
     msg.addEventListener('boundary', onWordBoundary);
 
     msg.onend = function(e) {
-      $body.classList.remove('animating');
-      $quote.innerHTML = currentText;
+      requestAnimationFrame(function() {
+        $body.classList.remove('animating');
+        $quote.innerHTML = currentText;
+      })
+     
     }
 
     requestAnimationFrame( function () {
@@ -67,7 +83,7 @@ var vb = new function () {
   function getNewQuote() {
     var quoteNum =  randInt(0, data.length - 1);   // 82 35
     var quote = data[quoteNum].replace(/&apos;/g, '\'').replace(/:[^\s]+:/g, '');
-    console.clear();
+    //console.clear();
     console.log(quoteNum);
     say(quote);
   }
@@ -91,6 +107,9 @@ var vb = new function () {
 
   function onWordBoundary(e) {
     //var text = e.currentTarget.text;
+    if (fallbackTimeout) {
+      clearTimeout(fallbackTimeout);
+    }
     $mouth.className = '';
     var textUpToBoundary = currentText.substring(0, e.charIndex);
       var rest = currentText.substring(e.charIndex);
@@ -108,7 +127,7 @@ var vb = new function () {
       mouthStyle.animationIterationCount = syllables;
       $quote.innerHTML = (currentText.substring(0, e.charIndex + nextBoundary + 1));
     
-    requestAnimationFrame(openMouth, 5);
+    requestAnimationFrame(openMouth, 10);
   }
 
   function openMouth() {
