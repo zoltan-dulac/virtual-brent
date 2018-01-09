@@ -7,8 +7,7 @@ NOUNS=`cat brent.dat | tr '[A-Z]' '[a-z]' | wordpos get -n  |  grep -v "^#"  | e
   for i in $NOUNS
   do
     echo -n "'$i': ["
-    grep -wni $i brent.dat | awk -F":" '{print $1}' | tr '
-  ' ','
+    grep -wni $i brent.dat | awk -F":" '{printf("%d,", $1 - 1);}' 
     echo "],"
   done
   echo "}"

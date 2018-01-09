@@ -8,9 +8,12 @@ var vb = new function () {
     $button = document.getElementById('brent-button'),
     $body = document.body,
     mouthStyle = $mouth.style,
-    fallbackTimeout,
+<<<<<<< HEAD
     recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)(),
     possibleResponses = [];
+=======
+    fallbackTimeout;
+>>>>>>> a2aaffd0e1bfaeb7fc7025b19305f390a3a80b0f
 
   function randInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -26,8 +29,11 @@ var vb = new function () {
         }
       })
       .then(function(text) {
-        data=text.replace(/&apos;/g, '\'').replace(/:[^\s]+:/g, '').split('\n');
+        data=text.split('\n');
+<<<<<<< HEAD
         startListening();
+        getNewQuote();
+=======
         if (window.speechSynthesis.getVoices().length === 0) {
           window.speechSynthesis.onvoiceschanged = function() {
             getNewQuote();
@@ -35,6 +41,8 @@ var vb = new function () {
         } else {
           getNewQuote();
         }
+        
+>>>>>>> a2aaffd0e1bfaeb7fc7025b19305f390a3a80b0f
       })
       .catch(function() {
         alert('Brent just gave up and went home. Please try again later.');
@@ -85,13 +93,19 @@ var vb = new function () {
   function getNewQuote(n) {
     var quoteNum;
 
-    if (typeof(n) === 'number') {
+    if (n) {
       quoteNum = n;
     } else {
       quoteNum =  randInt(0, data.length - 1);   // 82 35
     }
     
-    var quote = data[quoteNum];
+    var quote = data[quoteNum].replace(/&apos;/g, '\'').replace(/:[^\s]+:/g, '');
+<<<<<<< HEAD
+    
+=======
+    //console.clear();
+    console.log(quoteNum);
+>>>>>>> a2aaffd0e1bfaeb7fc7025b19305f390a3a80b0f
     say(quote);
   }
 
@@ -157,7 +171,7 @@ var vb = new function () {
       'result', 
       'soundstart',
       'soundend',*/
-      //'speechend',
+      'speechend',
       //'start'
      ].forEach(function(eventName) {
        recognition.addEventListener(eventName, function(e) {
@@ -167,42 +181,30 @@ var vb = new function () {
 
      recognition.addEventListener('end', recognitionEndEvent);
      recognition.addEventListener('result', resultEvent);
-     //recognition.addEventListener('speechend', speechEndEvent);
+     recognition.addEventListener('speechend', speechEndEvent);
   }
 
   function recognitionEndEvent(e) {
     startListening();
   }
 
-  function guessTheSubject(sentence) {
-    var terms = nlp(sentence).terms().data();
-    
-    for (var i=0; i<terms.length; i++) {
-      var term = terms[i];
-
-      if (term.bestTag === "Noun" && term.tags.indexOf('Pronoun') < 0) {
-        console.log('chosen term:', term);
-        return term.normal;
-      }
-    }
-
-    return "";
+  function speechEndEvent(e) {
+    var randomQuote = 1;
   }
 
   function resultEvent(e) {
-    
-    var finalResult = e.results[0][0].transcript;
-    var noun = guessTheSubject(finalResult);
-    console.log('result event', finalResult,noun);
-    possibleResponses = nounIndex[noun];
-    
+    var finalResult = event.results[0][0].transcript;
+    var words = finalResult.split(/\s+/g);
 
-    if (possibleResponses && possibleResponses.length > 0) {
-      var resultIndex = randInt(0, possibleResponses.length - 1);
-      var response = data[possibleResponses[resultIndex]];
-      console.log('result:', response);
-      say(response);
+    possibleResponses = [];
+    for (var i=0; i<words.length; i++) {
+      var word = words[i];
+      var index = nounIndex[word];
+      if (index) {
+        possibleResponses = possibleResponses.concat(index);
+      }
     }
+    console.log(words, possibleResponses);
   }
 
   function startListening() {

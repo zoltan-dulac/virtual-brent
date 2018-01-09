@@ -3,49 +3,48 @@
 body {
   margin: 0;
   background-color: black;
+  overflow: hidden;
 }
 
 header {
   position: absolute;
   z-index: 1;
   width: 100%;
-  background: white;
+  background: #ffffcc;
   font-family: Arial, Helvetica, sans-serif;
-  padding: 0.4vmin;
+  font-size: 12px;
+  padding: 4px 10px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 h1 {
   margin: 0;
-  font-size: 2vmin;
+  font-size: 16px;
+  padding: 0;
 }
 
 header p {
-  font-size: 1.4vmin;
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
 }
 
 #brent {
   display: block;
-  margin: 0 auto;
+  position: absolute;
+  top: 0;
+  left: calc(50vw - 53.5vmin);
   width: 107vmin;
 }
 
 #brent-mouth {
   position: absolute;
   top: 37.7vmin;
-  left: calc(50vw - 0.25vmin);
+  left: calc(50vw + 0.4vmin);
   width: 6.7vmin;
   transform: translate3d(0, 0, 0);
 }
-
-
-@media
-(-webkit-min-device-pixel-ratio: 2), 
-(min-resolution: 192dpi) { 
-  #brent-mouth {
-    left: calc(50vw + 0.5vmin);
-  }
-} 
 
 .animating #brent-mouth {
   will-change: transform;
@@ -77,8 +76,20 @@ header p {
 }
 
 
+@media (max-width: 960px) {
+  #brent-quip {
+    font-size: 12px;
+  }
+}
+
+
 #brent-quip div {
   background: white;
+}
+
+.fallback-text {
+  opacity: 0;
+  animation: fallback-fade 100ms ease-in-out forwards;
 }
 
 .animating #brent-quip div {
@@ -89,7 +100,7 @@ header p {
 #brent-button {
   display: inline-block;
   font-family: "Helvetica", sans-serif;
-  font-size: 1.7vmin;
+  font-size: 12px;
   background: #ffcccc;
 }
 
@@ -104,12 +115,10 @@ header p {
   100% {
     transform: translate3d(0, 1vmin, 0);
   }
-
-  
 }
 
-@media (max-aspect-ratio: 1123/1038) {
-  #brent-mouth {
-    left: calc(54vw);
+@keyframes fallback-fade {
+  0% {
+    opacity: 1;
   }
 }
