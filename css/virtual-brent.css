@@ -25,6 +25,9 @@ header p {
 }
 
 #brent {
+  position: absolute;
+  top: 0;
+  left: calc(50vw - 53.5vmin);
   display: block;
   margin: 0 auto;
   width: 107vmin;
@@ -106,10 +109,4 @@ header p {
   }
 
   
-}
-
-@media (max-aspect-ratio: 1123/1038) {
-  #brent-mouth {
-    left: calc(54vw);
-  }
 }
