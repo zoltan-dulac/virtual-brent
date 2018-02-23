@@ -30,10 +30,10 @@ var vb = new function () {
         startListening();
         if (window.speechSynthesis.getVoices().length === 0) {
           window.speechSynthesis.onvoiceschanged = function() {
-            getNewQuote();
+            //getNewQuote();
           };
         } else {
-          getNewQuote();
+          //getNewQuote();
         }
       })
       .catch(function() {
@@ -149,9 +149,9 @@ var vb = new function () {
    */
   function setRecognitionEvents() {
     [
-      /* 'audiostart',
+      //'audiostart',
       'audioend',
-      'end',
+      /* 'end',
       'error',
       'nomatch',
       'result', 
@@ -161,7 +161,7 @@ var vb = new function () {
       //'start'
      ].forEach(function(eventName) {
        recognition.addEventListener(eventName, function(e) {
-         console.log(eventName, e);
+         //console.log(eventName, e);
        });
      });
 
@@ -193,7 +193,8 @@ var vb = new function () {
     
     var finalResult = e.results[0][0].transcript;
     var noun = guessTheSubject(finalResult);
-    console.log('result event', finalResult,noun);
+    console.log('result event', e, noun);
+    say(finalResult);
     possibleResponses = nounIndex[noun];
     
 
