@@ -87,11 +87,6 @@ header p {
   background: white;
 }
 
-.fallback-text {
-  opacity: 0;
-  animation: fallback-fade 100ms ease-in-out forwards;
-}
-
 .animating #brent-quip div {
   will-change: contents;
 }
@@ -115,10 +110,6 @@ header p {
   100% {
     transform: translate3d(0, 1vmin, 0);
   }
-}
 
-@keyframes fallback-fade {
-  0% {
-    opacity: 1;
-  }
+  
 }
