@@ -60,9 +60,9 @@ var vb = new function () {
     msg.pitch = 1;
     msg.text = text;
 
-    fallbackTimeout = setTimeout(function() {
+    /*fallbackTimeout = setTimeout(function() {
       $quote.innerHTML = text;
-    }, 100);
+    }, 300); */
 
     msg.addEventListener('boundary', onWordBoundary);
 
